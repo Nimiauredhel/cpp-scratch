@@ -16,6 +16,12 @@ void GfxElement::SetPosition(int x, int y)
     m_position = { x, y };
 }
 
+void GfxElement::MovePosition(int x, int y)
+{
+    m_position.x += x;
+    m_position.y +=y;
+}
+
 void GfxElement::SetScale(float x, float y)
 {
     m_scale = { x, y };

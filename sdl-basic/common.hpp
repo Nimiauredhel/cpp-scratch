@@ -1,3 +1,6 @@
+#ifndef COMMON_HPP
+#define COMMON_HPP
+
 struct Window
 {
     int width;
@@ -16,3 +19,5 @@ struct Vector2Float
     float x;
     float y;
 };
+
+#endif

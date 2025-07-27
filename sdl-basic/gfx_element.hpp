@@ -11,6 +11,7 @@ class GfxElement
         void SetTexture(SDL_Texture **texture_pptr);
         void SetPosition(int x, int y);
         void SetScale(float x, float y);
+        void MovePosition(int x, int y);
         void Draw(Window window_data, SDL_Renderer *renderer);
     private:
         Vector2Int m_position;

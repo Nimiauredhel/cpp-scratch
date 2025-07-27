@@ -1,37 +1,20 @@
-#ifndef GFX_H
-#define GFX_H
+#ifndef GFX_HPP
+#define GFX_HPP
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_video.h>
+#include "common_sdl.hpp"
+#include "gfx_element.hpp"
 
-struct Vector2Int
+enum TextureId
 {
-    int x;
-    int y;
-};
-
-struct Vector2Float
-{
-    float x;
-    float y;
-};
-
-class GfxElement
-{
-    public:
-        GfxElement(void);
-        void SetTexture(SDL_Texture **texture_pptr);
-        void SetPosition(int x, int y);
-        void SetScale(float x, float y);
-        void Draw(void);
-    private:
-        Vector2Int m_position;
-        Vector2Float m_scale;
-        SDL_Texture *m_texture_ptr;
+    TEXTURE_NONE = 0,
+    TEXTURE_BG = 1,
+    TEXTURE_HEAD = 2,
 };
 
 void gfx_window_init(int width, int height, int tile_size);
 void gfx_window_deinit(void);
+SDL_Texture** gfx_get_texture_pptr(TextureId id);
+void gfx_draw_element(GfxElement *element);
 void gfx_clear(void);
 void gfx_present(void);
 

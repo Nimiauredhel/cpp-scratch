@@ -17,12 +17,13 @@ int main(void)
     std::this_thread::sleep_for(std::chrono::milliseconds(DELAY_MS));
 
     GfxElement *test_element = new GfxElement;
+    test_element->SetTexture(gfx_get_texture_pptr(TEXTURE_HEAD));
 
     while(counter < 10)
     {
         gfx_clear();
         test_element->SetPosition(counter, counter);
-        test_element->Draw();
+        gfx_draw_element(test_element);
         gfx_present();
         counter++;
         std::this_thread::sleep_for(std::chrono::milliseconds(DELAY_MS));

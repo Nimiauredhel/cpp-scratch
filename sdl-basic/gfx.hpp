@@ -14,8 +14,8 @@ enum TextureId
 void gfx_window_init(int width, int height, int tile_size);
 void gfx_window_deinit(void);
 SDL_Texture** gfx_get_texture_pptr(TextureId id);
-void gfx_draw_element(GfxElement *element);
-void gfx_clear(void);
+GfxElement *gfx_create_element(void);
+void gfx_destroy_element(GfxElement *element);
 void gfx_present(void);
 
 #endif

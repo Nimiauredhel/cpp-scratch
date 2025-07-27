@@ -13,24 +13,19 @@ int main(void)
     std::cout << "Hello World!" << std::endl;
 
     gfx_window_init(10, 10, 32);
-    gfx_present();
-    std::this_thread::sleep_for(std::chrono::milliseconds(DELAY_MS));
 
-    GfxElement *test_element = new GfxElement;
+    GfxElement *test_element = gfx_create_element();
     test_element->SetTexture(gfx_get_texture_pptr(TEXTURE_HEAD));
 
     while(counter < 10)
     {
-        gfx_clear();
         test_element->SetPosition(counter, counter);
-        gfx_draw_element(test_element);
         gfx_present();
         counter++;
         std::this_thread::sleep_for(std::chrono::milliseconds(DELAY_MS));
     }
 
-    delete(test_element);
-
+    gfx_destroy_element(test_element);
     gfx_window_deinit();
 
     return 0;

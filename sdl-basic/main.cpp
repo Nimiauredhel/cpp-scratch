@@ -28,7 +28,7 @@ int main(void)
         std::this_thread::sleep_for(std::chrono::milliseconds(DELAY_MS));
     }
 
-    delete test_element;
+    delete(test_element);
 
     gfx_window_deinit();
 

@@ -26,9 +26,8 @@ static void load_texture(std::string path, SDL_Texture **texture_ptr)
 }
 
 GfxElement::GfxElement(void)
+    : m_position{ 0 , 0 }, m_scale{ 1.0f, 1.0f }, m_texture_ptr{nullptr}
 {
-    m_position = { 0, 0 };
-    m_scale = { 1.0f, 1.0f };
     this->SetTexture(&texture_test);
 }
 
@@ -90,6 +89,7 @@ void gfx_window_deinit(void)
 
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(main_window);
+    SDL_VideoQuit();
 }
 
 void gfx_clear(void)

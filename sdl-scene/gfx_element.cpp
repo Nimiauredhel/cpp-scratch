@@ -31,11 +31,11 @@ void GfxElement::Draw(Window window_data, SDL_Renderer *renderer, Vector2Int off
         Vector2Int draw_pos = { 0, 0 };
         Transform &transform = GetTransform();
 
-        draw_pos.x = (offset.x + transform.GetPosX()) * window_data.tile_size;
+        draw_pos.x = offset.x + transform.GetPosX();
         if (draw_pos.x < 0 || draw_pos.x >= window_data.width) return;
-        draw_pos.y = (offset.y + transform.GetPosY()) * window_data.tile_size;
+        draw_pos.y = offset.y + transform.GetPosY();
         if (draw_pos.y < 0 || draw_pos.y >= window_data.height) return;
-        SDL_Rect destination = { draw_pos.x, draw_pos.y, 0, 0 };
+        SDL_Rect destination = { draw_pos.x*window_data.tile_size, draw_pos.y*window_data.tile_size, 0, 0 };
         SDL_QueryTexture(m_texture_ptr, NULL, NULL, &destination.w, &destination.h);
         destination.w *= transform.GetScaleX();
         destination.h *= transform.GetScaleY();

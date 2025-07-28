@@ -50,16 +50,18 @@ static void gfx_draw_tile(int x, int y, TextureId texture_id)
 
 static void gfx_present(void)
 {
-    static Vector2Int offset = { 0, 0 };
+    Vector2Int offset = { 0, 0 };
+
+    Vector2Int mid_screen = { main_window_data.width / 2, main_window_data.height / 2 };
 
     if (focal_element == nullptr)
     {
-        offset = { 0, 0 };
+        offset = mid_screen;
     }
     else
     {
         Transform &focal_transform = focal_element->GetTransform();
-        offset = { -focal_transform.GetPosX(), -focal_transform.GetPosY()};
+        offset = { mid_screen.x-focal_transform.GetPosX(), mid_screen.y-focal_transform.GetPosY()};
     }
 
     SDL_RenderClear(renderer);

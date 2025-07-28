@@ -58,7 +58,7 @@ static void gfx_window_init(int width, int height, int tile_size)
     std::string title = "Test Window";
 
     SDL_VideoInit(NULL);
-    main_window = SDL_CreateWindow(title.c_str(), 32, 32, main_window_data.width*main_window_data.tile_size, main_window_data.height*main_window_data.tile_size, SDL_WINDOW_SHOWN);
+    main_window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, main_window_data.width*main_window_data.tile_size, main_window_data.height*main_window_data.tile_size, SDL_WINDOW_SHOWN);
     renderer = SDL_CreateRenderer(main_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC); 
 
     load_texture("textures/bg.bmp", &texture_bg);

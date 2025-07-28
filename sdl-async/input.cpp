@@ -1,7 +1,7 @@
 #include "input.hpp"
 #include "gfx_element.hpp"
 
-static constexpr int DELAY_MS = (16);
+static constexpr int DELAY_MS = (32);
 
 static bool is_initialized = false;
 
@@ -13,36 +13,54 @@ static void input_init(void)
 static InputId input_poll(void)
 {
     static SDL_Event event;
+    static SDL_Keycode latest_keycode = SDLK_UNKNOWN;
+    static InputId latest_input_id = INPUT_NONE;
 
     if (SDL_PollEvent(&event))
     {
         switch (event.type)
         {
-            case SDL_QUIT:
-            case SDL_APP_TERMINATING:
-                return INPUT_QUIT;
-            case SDL_KEYDOWN:
-                switch(event.key.keysym.sym)
+            case SDL_KEYUP:
+                if (latest_keycode == event.key.keysym.sym)
                 {
-                    case SDLK_a:
-                        return INPUT_LEFT;
-                    case SDLK_w:
-                        return INPUT_UP;
-                    case SDLK_d:
-                        return INPUT_RIGHT;
-                    case SDLK_s:
-                        return INPUT_DOWN;
-                    case SDLK_q:
-                        return INPUT_QUIT;
+                    latest_keycode = SDLK_UNKNOWN;
+                    latest_input_id = INPUT_NONE;
                 }
                 break;
-            case SDL_KEYUP:
+            case SDL_QUIT:
+            case SDL_APP_TERMINATING:
+                latest_input_id = INPUT_QUIT;
+                break;
+            case SDL_KEYDOWN:
+                latest_keycode = event.key.keysym.sym;
+                switch(latest_keycode)
+                {
+                    case SDLK_a:
+                        latest_input_id = INPUT_LEFT;
+                        break;
+                    case SDLK_w:
+                        latest_input_id = INPUT_UP;
+                        break;
+                    case SDLK_d:
+                        latest_input_id = INPUT_RIGHT;
+                        break;
+                    case SDLK_s:
+                        latest_input_id = INPUT_DOWN;
+                        break;
+                    case SDLK_q:
+                        latest_input_id = INPUT_QUIT;
+                        break;
+                    default:
+                        latest_input_id = INPUT_NONE;
+                        break;
+                }
+                break;
             default:
                 break;
         }
     }
 
-    return INPUT_NONE;
+    return latest_input_id;
 }
 
 bool input_is_initialized(void)

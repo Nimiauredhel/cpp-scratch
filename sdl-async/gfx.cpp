@@ -5,7 +5,7 @@
 
 #include "gfx.hpp"
 
-static constexpr int DELAY_MS = (16);
+static constexpr int DELAY_MS = (32);
 
 static bool is_initialized = false;
 

@@ -1,5 +1,5 @@
 #include "input.hpp"
-#include "gfx_element.hpp"
+#include "transform.hpp"
 
 static constexpr int DELAY_MS = (32);
 
@@ -75,7 +75,7 @@ int input_task(void *arg)
 
     InputId last_input = INPUT_NONE;
 
-    GfxElement *element = (GfxElement *)arg;
+    Transform *element = (Transform *)arg;
 
     while (!should_terminate)
     {

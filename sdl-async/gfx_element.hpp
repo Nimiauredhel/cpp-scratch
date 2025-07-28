@@ -3,19 +3,17 @@
 
 #include "common.hpp"
 #include "common_sdl.hpp"
+#include "transform.hpp"
 
 class GfxElement
 {
     public:
         GfxElement(void);
         void SetTexture(SDL_Texture **texture_pptr);
-        void SetPosition(int x, int y);
-        void SetScale(float x, float y);
-        void MovePosition(int x, int y);
         void Draw(Window window_data, SDL_Renderer *renderer);
+        Transform& GetTransform(void);
     private:
-        Vector2Int m_position;
-        Vector2Float m_scale;
+        Transform m_transform;
         SDL_Texture *m_texture_ptr;
 };
 

@@ -17,7 +17,7 @@ int main(void)
 
     GfxElement *test_element = gfx_create_element(TEXTURE_HEAD);
 
-    SDL_Thread *input_thread = SDL_CreateThread(input_task, "input_thred", test_element);
+    SDL_Thread *input_thread = SDL_CreateThread(input_task, "input_thred", &test_element->GetTransform());
 
     SDL_WaitThread(input_thread, nullptr);
     SDL_WaitThread(gfx_thread, nullptr);

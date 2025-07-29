@@ -1,7 +1,6 @@
-#include "input.hpp"
+#include "player.hpp"
 #include "transform.hpp"
 
-#include <queue>
 #include <set>
 
 static constexpr int POLLING_DELAY_MS = (32);
@@ -76,13 +75,14 @@ static InputId input_poll(void)
     return latest_input_id;
 }
 
-bool input_is_initialized(void)
+bool player_is_initialized(void)
 {
     return is_initialized;
 }
 
-int input_task(void *arg)
+int player_task(void *arg)
 {
+    std::cout << "Player task started." << std::endl;
     input_init();
     is_initialized = true;
 

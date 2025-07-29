@@ -188,6 +188,7 @@ SDL_Texture* gfx_get_texture_ptr(TextureId id)
 
 int gfx_task(void *arg)
 {
+    std::cout << "Gfx task started." << std::endl;
     gfx_window_init(32, 16, 32);
     is_initialized = true;
 

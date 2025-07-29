@@ -1,5 +1,5 @@
-#ifndef INPUT_HPP
-#define INPUT_HPP
+#ifndef PLAYER_HPP
+#define PLAYER_HPP
 
 #include "common.hpp"
 #include "common_sdl.hpp"
@@ -14,7 +14,7 @@ enum InputId
     INPUT_QUIT = 5,
 };
 
-bool input_is_initialized(void);
-int input_task(void *arg);
+bool player_is_initialized(void);
+int player_task(void *arg);
 
 #endif

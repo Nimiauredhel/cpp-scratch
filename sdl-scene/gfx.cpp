@@ -10,7 +10,7 @@ static const std::string texture_paths[TEXTURE_ID_COUNT] =
     "textures/floor.png",
     "textures/wall.png",
     "textures/door.png",
-    "textures/head.png",
+    "textures/player.png",
 };
 
 static bool is_initialized = false;

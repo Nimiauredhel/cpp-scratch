@@ -14,7 +14,7 @@ enum TextureId
     TEXTURE_FLOOR = 2,
     TEXTURE_WALL = 3,
     TEXTURE_DOOR = 4,
-    TEXTURE_HEAD = 5,
+    TEXTURE_PLAYER = 5,
 };
 
 void gfx_set_focal_entity(Entity *entity);

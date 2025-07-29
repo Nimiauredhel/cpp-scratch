@@ -1,5 +1,6 @@
 #include "player.hpp"
 #include "transform.hpp"
+#include "scene.hpp"
 
 #include <set>
 
@@ -7,6 +8,42 @@ static constexpr int POLLING_DELAY_MS = (32);
 static constexpr int COOLDOWN_DELAY_MS = (32);
 
 static bool is_initialized = false;
+
+static void player_check_collision(Transform *player_transform)
+{
+    int door_count = scene_get_current()->GetDoorCount();
+
+    if (door_count > 0)
+    {
+        Door *door;
+
+        for (int i = 0; i < door_count; i++)
+        {
+            door = scene_get_current()->GetDoorFromIdx(i);
+
+            if (door->position.x == player_transform->GetPosX()
+                && door->position.y == player_transform->GetPosY()
+                && door->destination_index < door_count)
+            {
+                Vector2Int new_position = scene_get_current()->GetDoorFromIdx(door->destination_index)->position;
+                player_transform->SetPosition(new_position.x, new_position.y);
+                break;
+            }
+        }
+    }
+}
+
+static void player_move(Transform *player_transform, int x_delta, int y_delta)
+{
+    Vector2Int new_position = { player_transform->GetPosX() + x_delta, player_transform->GetPosY() + y_delta };
+
+    if (new_position.x < 0 || new_position.y < 0) return;
+    Vector2Int scene_size = scene_get_current()->GetSize();
+    if (new_position.x >= scene_size.x || new_position.y >= scene_size.y) return;
+
+    player_transform->SetPosition(new_position.x, new_position.y);
+    player_check_collision(player_transform);
+}
 
 static void input_init(void)
 {
@@ -88,7 +125,7 @@ int player_task(void *arg)
 
     InputId last_input = INPUT_NONE;
 
-    Transform *element = (Transform *)arg;
+    Transform *player_transform = (Transform *)arg;
 
     while (!should_terminate)
     {
@@ -98,19 +135,19 @@ int player_task(void *arg)
         switch(last_input)
         {
         case INPUT_LEFT:
-            element->MovePosition(-1, 0);
+            player_move(player_transform, -1, 0);
             SDL_Delay(COOLDOWN_DELAY_MS);
             break;
         case INPUT_UP:
-            element->MovePosition(0, -1);
+            player_move(player_transform, 0, -1);
             SDL_Delay(COOLDOWN_DELAY_MS);
             break;
         case INPUT_RIGHT:
-            element->MovePosition(1, 0);
+            player_move(player_transform, 1, 0);
             SDL_Delay(COOLDOWN_DELAY_MS);
             break;
         case INPUT_DOWN:
-            element->MovePosition(0, 1);
+            player_move(player_transform, 0, 1);
             SDL_Delay(COOLDOWN_DELAY_MS);
             break;
         case INPUT_QUIT:

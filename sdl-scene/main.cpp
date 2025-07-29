@@ -13,9 +13,11 @@ int main(void)
     while(!gfx_is_initialized()) SDL_Delay(10);
 
     Scene *test_scene = new Scene(scene_size);
-    test_scene->CreateDoor(4, 0, 1);
-    test_scene->CreateDoor(0, 5, 1);
-    Entity *test_entity = test_scene->CreateEntity(TEXTURE_HEAD);
+    test_scene->CreateDoor(8, 0, 1);
+    test_scene->CreateDoor(0, 8, 2);
+    test_scene->CreateDoor(8, 8, 3);
+    test_scene->CreateDoor(0, 0, 0);
+    Entity *test_entity = test_scene->CreateEntity(TEXTURE_PLAYER);
     scene_set_current(test_scene);
     gfx_set_focal_entity(test_entity);
 

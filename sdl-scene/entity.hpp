@@ -9,7 +9,7 @@ class Entity
 {
     public:
         Entity(void);
-        void SetTexture(SDL_Texture **texture_pptr);
+        void SetTexture(SDL_Texture *texture_ptr);
         void Draw(Window window_data, SDL_Renderer *renderer, Vector2Int offset);
         Transform& GetTransform(void);
     private:

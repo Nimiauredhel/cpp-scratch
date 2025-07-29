@@ -6,11 +6,11 @@ Entity::Entity(void)
 {
 }
 
-void Entity::SetTexture(SDL_Texture **texture_pptr)
+void Entity::SetTexture(SDL_Texture *texture_ptr)
 {
-    if (*texture_pptr != nullptr)
+    if (texture_ptr != nullptr)
     {
-        m_texture_ptr = *texture_pptr;
+        m_texture_ptr = texture_ptr;
     }
     else
     {
@@ -43,7 +43,7 @@ void Entity::Draw(Window window_data, SDL_Renderer *renderer, Vector2Int offset)
     else
     {
         std::cout << "Null texture pointer on gfx element" << std::endl;
-        this->SetTexture(gfx_get_texture_pptr(TEXTURE_HEAD));
+        this->SetTexture(gfx_get_texture_ptr(TEXTURE_HEAD));
     }
 }
 

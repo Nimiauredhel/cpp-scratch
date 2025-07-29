@@ -1,6 +1,17 @@
 #include "gfx.hpp"
+#include "scene.hpp"
 
 static constexpr int DELAY_MS = (32);
+
+static const std::string texture_paths[TEXTURE_ID_COUNT] =
+{
+    "",
+    "textures/bg.bmp",
+    "textures/floor.png",
+    "textures/wall.png",
+    "textures/door.png",
+    "textures/head.png",
+};
 
 static bool is_initialized = false;
 
@@ -9,8 +20,7 @@ static Window main_window_data = {};
 static SDL_Window *main_window = nullptr;
 static SDL_Renderer *renderer = nullptr;
 
-static SDL_Texture *texture_bg = nullptr;
-static SDL_Texture *texture_test = nullptr;
+static SDL_Texture *texture_ptrs[TEXTURE_ID_COUNT] = { nullptr };
 
 static Entity *focal_entity = nullptr;
 
@@ -36,7 +46,7 @@ static void gfx_draw_tile(int x, int y, TextureId texture_id)
 {
     if (texture_id == TEXTURE_NONE) return;
     SDL_Rect destination = { x * main_window_data.tile_size, y * main_window_data.tile_size, 0, 0 };
-    SDL_Texture *texture_ptr = *gfx_get_texture_pptr(texture_id);
+    SDL_Texture *texture_ptr = gfx_get_texture_ptr(texture_id);
     SDL_QueryTexture(texture_ptr, NULL, NULL, &destination.w, &destination.h);
     SDL_RenderCopy(renderer, texture_ptr, NULL, &destination);
 }
@@ -64,23 +74,38 @@ static void gfx_present(void)
         offset = { mid_screen.x-focal_transform.GetPosX(), mid_screen.y-focal_transform.GetPosY()};
     }
 
-    Vector2Int scene_size = current_scene->GetSize();
-    Vector2Int draw_pos = { 0, 0 };
-
     /// Renderer is cleared - no drawing before this step
     SDL_RenderClear(renderer);
 
+    Vector2Int scene_size = current_scene->GetSize();
+    Vector2Int draw_pos = { 0, 0 };
+    TextureId texture_id = TEXTURE_NONE;
+
     /// Drawing begins here
-    for (int x = 0; x < scene_size.x; x++)
+    for (int x = -1; x < scene_size.x+1; x++)
     {
-        for (int y = 0; y < scene_size.y; y++)
+        for (int y = -1; y < scene_size.y+1; y++)
         {
             draw_pos.x = x + offset.x;
             if (draw_pos.x < 0 || draw_pos.x >= main_window_data.width) continue;
             draw_pos.y = y + offset.y;
             if (draw_pos.y < 0 || draw_pos.y >= main_window_data.height) continue;
-            gfx_draw_tile(x + offset.x, y + offset.y, current_scene->GetTileTextureId(x, y));
+
+            texture_id = (x < 0 || x >= scene_size.x
+                    || y < 0 || y >= scene_size.y) ?
+                    TEXTURE_WALL : TEXTURE_FLOOR;
+
+            gfx_draw_tile(x + offset.x, y + offset.y, texture_id);
         }
+    }
+
+    std::size_t door_count = current_scene->GetDoorCount();
+    Door *door = nullptr;
+
+    for (std::size_t i = 0; i < door_count; i++)
+    {
+        door = current_scene->GetDoorFromIdx(i);
+        gfx_draw_tile(door->position.x + offset.x, door->position.y + offset.y, TEXTURE_DOOR);
     }
 
     std::size_t entity_count = current_scene->GetEntityCount();
@@ -116,19 +141,29 @@ static void gfx_window_init(int width, int height, int tile_size)
     main_window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, main_window_data.width*main_window_data.tile_size, main_window_data.height*main_window_data.tile_size, SDL_WINDOW_SHOWN);
     renderer = SDL_CreateRenderer(main_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC); 
 
-    load_texture("textures/bg.bmp", &texture_bg);
-    load_texture("textures/head.png", &texture_test);
+    texture_ptrs[TEXTURE_NONE] = nullptr;
+
+    for (int i = TEXTURE_NONE+1; i < TEXTURE_ID_COUNT; i++)
+    {
+        load_texture(texture_paths[i], &texture_ptrs[i]);
+    }
 
     SDL_RenderClear(renderer);
-    SDL_RenderCopy(renderer, texture_bg, NULL, NULL);
+    SDL_RenderCopy(renderer, texture_ptrs[TEXTURE_BG], NULL, NULL);
     SDL_RenderPresent(renderer);
     SDL_RaiseWindow(main_window);
 }
 
 static void gfx_window_deinit(void)
 {
-    SDL_DestroyTexture(texture_bg);
-    SDL_DestroyTexture(texture_test);
+    for (int i = TEXTURE_NONE+1; i < TEXTURE_ID_COUNT; i++)
+    {
+        if (texture_ptrs[i] != nullptr)
+        {
+            SDL_DestroyTexture(texture_ptrs[i]);
+            texture_ptrs[i] = nullptr;
+        }
+    }
 
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(main_window);
@@ -145,18 +180,10 @@ bool gfx_is_initialized(void)
     return is_initialized;
 }
 
-SDL_Texture** gfx_get_texture_pptr(TextureId id)
+SDL_Texture* gfx_get_texture_ptr(TextureId id)
 {
-    switch (id)
-    {
-    case TEXTURE_BG:
-        return &texture_bg;
-    case TEXTURE_HEAD:
-        return &texture_test;
-    case TEXTURE_NONE:
-    default:
-        return nullptr;
-    }
+    if (id == TEXTURE_NONE || id >= TEXTURE_ID_COUNT) return nullptr;
+    return texture_ptrs[id];
 }
 
 int gfx_task(void *arg)

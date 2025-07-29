@@ -5,23 +5,28 @@
 #include "gfx.hpp"
 #include "entity.hpp"
 
+struct Door
+{
+    Vector2Int position;
+    int destination_index;
+};
+
 class Scene
 {
     public:
         Scene(void);
-        Scene(Vector2Int new_size, TextureId *new_tiles);
+        Scene(Vector2Int new_size);
         Vector2Int GetSize(void);
-        TextureId GetTileTextureId(int x, int y);
-        Vector2Int GetEntrance(void);
-        void SetEntrance(int x, int y);
+        void CreateDoor(int x, int y, int dst_idx);
+        Door *GetDoorFromIdx(std::size_t idx);
+        std::size_t GetDoorCount(void);
         Entity *CreateEntity(TextureId initial_texture_id, Vector2Int initial_position = { -1, -1 });
         void DestroyEntity(Entity *element);
         Entity *GetEntityFromIdx(std::size_t idx);
         std::size_t GetEntityCount(void);
     private:
         Vector2Int m_size;
-        Vector2Int m_entrance;
-        TextureId *m_tiles;
+        std::vector<Door> doors;
         std::vector<Entity *> entities;
 };
 

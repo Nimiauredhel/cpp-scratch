@@ -4,19 +4,7 @@
 #include "gfx.hpp"
 #include "input.hpp"
 
-static Vector2Int scene_size = { 8, 8 };
-static Vector2Int scene_entrance = { 4, 3 };
-static TextureId scene_tiles[8*8] =
-{
-    TEXTURE_BG, TEXTURE_BG, TEXTURE_BG, TEXTURE_BG, TEXTURE_BG, TEXTURE_BG, TEXTURE_BG, TEXTURE_BG, 
-    TEXTURE_BG, TEXTURE_BG, TEXTURE_NONE, TEXTURE_BG, TEXTURE_BG, TEXTURE_BG, TEXTURE_BG, TEXTURE_BG, 
-    TEXTURE_BG, TEXTURE_BG, TEXTURE_NONE, TEXTURE_BG, TEXTURE_BG, TEXTURE_BG, TEXTURE_BG, TEXTURE_BG, 
-    TEXTURE_BG, TEXTURE_BG, TEXTURE_NONE, TEXTURE_NONE, TEXTURE_BG, TEXTURE_BG, TEXTURE_BG, TEXTURE_BG, 
-    TEXTURE_BG, TEXTURE_BG, TEXTURE_BG, TEXTURE_NONE, TEXTURE_BG, TEXTURE_BG, TEXTURE_BG, TEXTURE_BG, 
-    TEXTURE_BG, TEXTURE_BG, TEXTURE_BG, TEXTURE_NONE, TEXTURE_NONE, TEXTURE_NONE, TEXTURE_BG, TEXTURE_BG, 
-    TEXTURE_BG, TEXTURE_BG, TEXTURE_BG, TEXTURE_BG, TEXTURE_BG, TEXTURE_BG, TEXTURE_BG, TEXTURE_BG, 
-    TEXTURE_BG, TEXTURE_BG, TEXTURE_BG, TEXTURE_BG, TEXTURE_BG, TEXTURE_BG, TEXTURE_BG, TEXTURE_BG, 
-};
+static Vector2Int scene_size = { 16, 16 };
 
 int main(void)
 {
@@ -26,8 +14,9 @@ int main(void)
 
     while(!gfx_is_initialized()) SDL_Delay(10);
 
-    Scene *test_scene = new Scene(scene_size, scene_tiles);
-    test_scene->SetEntrance(scene_entrance.x, scene_entrance.y);
+    Scene *test_scene = new Scene(scene_size);
+    test_scene->CreateDoor(4, 0, 1);
+    test_scene->CreateDoor(0, 5, 1);
     Entity *test_entity = test_scene->CreateEntity(TEXTURE_HEAD);
     scene_set_current(test_scene);
     gfx_set_focal_entity(test_entity);

@@ -24,13 +24,6 @@ struct Vector2Float
     float y;
 };
 
-enum TextureId
-{
-    TEXTURE_NONE = 0,
-    TEXTURE_BG = 1,
-    TEXTURE_HEAD = 2,
-};
-
 extern bool should_terminate;
 
 #endif

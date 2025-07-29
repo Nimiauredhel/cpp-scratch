@@ -3,56 +3,61 @@
 static Scene *current_scene = nullptr;
 
 Scene::Scene(void)
-    : m_size{0, 0}, m_entrance{ 0, 0 }, m_tiles{nullptr}, entities{{}}
-{}
+    : m_size{0, 0}, doors {{}}, entities{{}}
+{
+    doors.clear();
+    entities.clear();
+}
 
-Scene::Scene(Vector2Int new_size, TextureId *new_tiles)
-    : m_size{new_size}, m_entrance{ 0, 0 }, m_tiles{new_tiles}, entities{{}}
-{}
+Scene::Scene(Vector2Int new_size)
+    : m_size{new_size}, doors {{}}, entities{{}}
+{
+    doors.clear();
+    entities.clear();
+}
 
 Vector2Int Scene::GetSize(void)
 {
     return m_size;
 }
 
-TextureId Scene::GetTileTextureId(int x, int y)
-{
-    if (m_tiles == nullptr
-        || x < 0 || x > m_size.x
-        || y < 0 || y > m_size.y)
-    {
-        return TEXTURE_NONE;
-    }
-
-    return m_tiles[x + (y * m_size.x)];
-}
-
-Vector2Int Scene::GetEntrance(void)
-{
-    return m_entrance;
-}
-
-void Scene::SetEntrance(int x, int y)
+void Scene::CreateDoor(int x, int y, int dst_idx)
 {
     if (x < 0 || x >= m_size.x
       || y < 0 || y >= m_size.y)
     {
-        std::cout << "Tried to set invalid scene entrance position." << std::endl;
+        std::cout << "Tried to add door at invalid position." << std::endl;
         return;
     }
 
-    m_entrance = { x, y };
+    doors.push_back({ {x, y}, dst_idx });
+}
+
+Door *Scene::GetDoorFromIdx(std::size_t idx)
+{
+    if (idx >= doors.size())
+    {
+        std::cout << "Tried to access door at invalid index " << idx << "." << std::endl;
+        return nullptr;
+    }
+
+    return &doors[idx];
+}
+
+std::size_t Scene::GetDoorCount(void)
+{
+    return doors.size();
 }
 
 Entity *Scene::CreateEntity(TextureId initial_texture_id, Vector2Int initial_position)
 {
     Entity *entity = new Entity();
-    entity->SetTexture(gfx_get_texture_pptr(initial_texture_id));
+    entity->SetTexture(gfx_get_texture_ptr(initial_texture_id));
     if (initial_position.x < 0 || initial_position.x >= m_size.x
         || initial_position.y < 0 || initial_position.y >= m_size.y)
     {
-        std::cout << "New entity position unspecified or invalid - defaulting to entrance" << std::endl;
-        initial_position = m_entrance;
+        std::cout << "New entity position unspecified or invalid - defaulting to (0, 0)." << std::endl;
+        initial_position = { 0, 0 };
     }
     entity->GetTransform().SetPosition(initial_position.x, initial_position.y);
     entities.push_back(entity);

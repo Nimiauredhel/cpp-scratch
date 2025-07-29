@@ -1,12 +1,12 @@
-#include "gfx_element.hpp"
+#include "entity.hpp"
 #include "gfx.hpp"
 
-GfxElement::GfxElement(void)
+Entity::Entity(void)
     : m_transform{Transform()}, m_texture_ptr{nullptr}
 {
 }
 
-void GfxElement::SetTexture(SDL_Texture **texture_pptr)
+void Entity::SetTexture(SDL_Texture **texture_pptr)
 {
     if (*texture_pptr != nullptr)
     {
@@ -18,12 +18,12 @@ void GfxElement::SetTexture(SDL_Texture **texture_pptr)
     }
 }
 
-Transform& GfxElement::GetTransform(void)
+Transform& Entity::GetTransform(void)
 {
     return m_transform;
 }
 
-void GfxElement::Draw(Window window_data, SDL_Renderer *renderer, Vector2Int offset)
+void Entity::Draw(Window window_data, SDL_Renderer *renderer, Vector2Int offset)
 {
     if (m_texture_ptr != nullptr)
     {

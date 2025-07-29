@@ -1,5 +1,6 @@
 #include "common.hpp"
 #include "common_sdl.hpp"
+#include "scene.hpp"
 #include "gfx.hpp"
 #include "input.hpp"
 
@@ -25,20 +26,18 @@ int main(void)
 
     while(!gfx_is_initialized()) SDL_Delay(10);
 
-    GfxElement *test_element = gfx_create_element(TEXTURE_HEAD);
-
     Scene *test_scene = new Scene(scene_size, scene_tiles);
     test_scene->SetEntrance(scene_entrance.x, scene_entrance.y);
+    Entity *test_entity = test_scene->CreateEntity(TEXTURE_HEAD);
+    scene_set_current(test_scene);
+    gfx_set_focal_entity(test_entity);
 
-    gfx_set_focal_element(test_element);
-    gfx_set_scene(test_scene);
-
-    SDL_Thread *input_thread = SDL_CreateThread(input_task, "input_thred", &test_element->GetTransform());
+    SDL_Thread *input_thread = SDL_CreateThread(input_task, "input_thred", &test_entity->GetTransform());
 
     SDL_WaitThread(input_thread, nullptr);
     SDL_WaitThread(gfx_thread, nullptr);
 
-    gfx_destroy_element(test_element);
+    test_scene->DestroyEntity(test_entity);
     delete(test_scene);
 
     return 0;

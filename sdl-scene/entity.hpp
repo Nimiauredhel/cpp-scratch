@@ -1,14 +1,14 @@
-#ifndef GFX_ELEMENT_HPP
-#define GFX_ELEMENT_HPP
+#ifndef ENTITY_HPP
+#define ENTITY_HPP
 
 #include "common.hpp"
 #include "common_sdl.hpp"
 #include "transform.hpp"
 
-class GfxElement
+class Entity
 {
     public:
-        GfxElement(void);
+        Entity(void);
         void SetTexture(SDL_Texture **texture_pptr);
         void Draw(Window window_data, SDL_Renderer *renderer, Vector2Int offset);
         Transform& GetTransform(void);

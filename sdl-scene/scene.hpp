@@ -8,7 +8,8 @@
 struct Door
 {
     Vector2Int position;
-    int destination_index;
+    std::size_t dest_door_index;
+    std::size_t dest_scene_index;
 };
 
 class Scene
@@ -17,7 +18,7 @@ class Scene
         Scene(void);
         Scene(Vector2Int new_size);
         Vector2Int GetSize(void);
-        void CreateDoor(int x, int y, int dst_idx);
+        void CreateDoor(int x, int y, std::size_t dst_door_idx, std::size_t dst_scene_idx);
         Door *GetDoorFromIdx(std::size_t idx);
         std::size_t GetDoorCount(void);
         Entity *CreateEntity(TextureId initial_texture_id, Vector2Int initial_position = { -1, -1 });
@@ -30,7 +31,10 @@ class Scene
         std::vector<Entity *> entities;
 };
 
-void scene_set_current(Scene *new_scene);
+void scene_set_current(std::size_t idx);
 Scene *scene_get_current(void);
+std::size_t scene_get_count(void);
+Scene *scene_get_by_idx(std::size_t idx);
+std::size_t scene_add_new(Vector2Int size);
 
 #endif

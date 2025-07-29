@@ -8,8 +8,9 @@ static constexpr int POLLING_DELAY_MS = (32);
 static constexpr int COOLDOWN_DELAY_MS = (32);
 
 static bool is_initialized = false;
+static Entity *player;
 
-static void player_check_collision(Transform *player_transform)
+static void player_check_collision(Transform &player_transform)
 {
     int door_count = scene_get_current()->GetDoorCount();
 
@@ -21,27 +22,33 @@ static void player_check_collision(Transform *player_transform)
         {
             door = scene_get_current()->GetDoorFromIdx(i);
 
-            if (door->position.x == player_transform->GetPosX()
-                && door->position.y == player_transform->GetPosY()
-                && door->destination_index < door_count)
+            if (door->position.x == player_transform.GetPosX()
+                && door->position.y == player_transform.GetPosY()
+                && door->dest_scene_index < scene_get_count()
+                && door->dest_door_index < scene_get_by_idx(door->dest_scene_index)->GetDoorCount())
             {
-                Vector2Int new_position = scene_get_current()->GetDoorFromIdx(door->destination_index)->position;
-                player_transform->SetPosition(new_position.x, new_position.y);
+                if (scene_get_current() != scene_get_by_idx(door->dest_scene_index))
+                {
+                    scene_set_current(door->dest_scene_index);
+                }
+
+                Vector2Int new_position = scene_get_current()->GetDoorFromIdx(door->dest_door_index)->position;
+                player_transform.SetPosition(new_position.x, new_position.y);
                 break;
             }
         }
     }
 }
 
-static void player_move(Transform *player_transform, int x_delta, int y_delta)
+static void player_move(Transform &player_transform, int x_delta, int y_delta)
 {
-    Vector2Int new_position = { player_transform->GetPosX() + x_delta, player_transform->GetPosY() + y_delta };
+    Vector2Int new_position = { player_transform.GetPosX() + x_delta, player_transform.GetPosY() + y_delta };
 
     if (new_position.x < 0 || new_position.y < 0) return;
     Vector2Int scene_size = scene_get_current()->GetSize();
     if (new_position.x >= scene_size.x || new_position.y >= scene_size.y) return;
 
-    player_transform->SetPosition(new_position.x, new_position.y);
+    player_transform.SetPosition(new_position.x, new_position.y);
     player_check_collision(player_transform);
 }
 
@@ -112,6 +119,11 @@ static InputId input_poll(void)
     return latest_input_id;
 }
 
+Entity *player_get_instance(void)
+{
+    return player;
+}
+
 bool player_is_initialized(void)
 {
     return is_initialized;
@@ -120,12 +132,15 @@ bool player_is_initialized(void)
 int player_task(void *arg)
 {
     std::cout << "Player task started." << std::endl;
+    player = new Entity();
+    player->SetTexture(gfx_get_texture_ptr(TEXTURE_PLAYER));
     input_init();
+    gfx_set_focal_entity(player);
     is_initialized = true;
 
     InputId last_input = INPUT_NONE;
 
-    Transform *player_transform = (Transform *)arg;
+    Transform &player_transform = player->GetTransform();
 
     while (!should_terminate)
     {

@@ -1,5 +1,6 @@
 #include "scene.hpp"
 
+static std::vector<Scene *> scenes;
 static Scene *current_scene = nullptr;
 
 Scene::Scene(void)
@@ -21,7 +22,7 @@ Vector2Int Scene::GetSize(void)
     return m_size;
 }
 
-void Scene::CreateDoor(int x, int y, int dst_idx)
+void Scene::CreateDoor(int x, int y, std::size_t dst_door_idx, std::size_t dst_scene_idx)
 {
     if (x < 0 || x >= m_size.x
       || y < 0 || y >= m_size.y)
@@ -30,7 +31,7 @@ void Scene::CreateDoor(int x, int y, int dst_idx)
         return;
     }
 
-    doors.push_back({ {x, y}, dst_idx });
+    doors.push_back({ {x, y}, dst_door_idx, dst_scene_idx });
 }
 
 Door *Scene::GetDoorFromIdx(std::size_t idx)
@@ -92,18 +93,41 @@ std::size_t Scene::GetEntityCount(void)
     return entities.size();
 }
 
-void scene_set_current(Scene *new_scene)
+void scene_set_current(std::size_t idx)
 {
-    if (current_scene == new_scene)
+    if (idx >= scenes.size()) return;
+
+    if (current_scene == scenes[idx])
     {
         std::cout << "Tried to set new scene but it's already the current scene." << std::endl;
         return;
     }
 
-    current_scene = new_scene;
+    current_scene = scenes[idx];
 }
 
 Scene *scene_get_current(void)
 {
     return current_scene;
+}
+
+std::size_t scene_get_count(void)
+{
+    return scenes.size();
+}
+
+Scene *scene_get_by_idx(std::size_t idx)
+{
+    if (idx >= scenes.size())
+    {
+        return nullptr;
+    }
+
+    return scenes[idx];
+}
+
+std::size_t scene_add_new(Vector2Int size)
+{
+    scenes.push_back(new Scene(size));
+    return scenes.size()-1;
 }

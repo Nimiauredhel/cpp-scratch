@@ -12,22 +12,31 @@ int main(void)
 
     while(!gfx_is_initialized()) SDL_Delay(10);
 
-    Scene *test_scene = new Scene(scene_size);
-    test_scene->CreateDoor(8, 0, 1);
-    test_scene->CreateDoor(0, 8, 2);
-    test_scene->CreateDoor(8, 8, 3);
-    test_scene->CreateDoor(0, 0, 0);
-    Entity *test_entity = test_scene->CreateEntity(TEXTURE_PLAYER);
-    scene_set_current(test_scene);
-    gfx_set_focal_entity(test_entity);
+    for (int i = 0; i < 4; i++)
+    {
+        scene_add_new(scene_size);
+    }
 
-    SDL_Thread *input_thread = SDL_CreateThread(player_task, "input_thred", &test_entity->GetTransform());
+    scene_get_by_idx(0)->CreateDoor(8, 0, 1, 3);
+    scene_get_by_idx(0)->CreateDoor(8, 8, 0, 1);
 
-    SDL_WaitThread(input_thread, nullptr);
+    scene_get_by_idx(1)->CreateDoor(0, 8, 1, 0);
+    scene_get_by_idx(1)->CreateDoor(0, 12, 0, 2);
+
+    scene_get_by_idx(2)->CreateDoor(5, 4, 1, 1);
+    scene_get_by_idx(2)->CreateDoor(8, 4, 0, 3);
+
+    scene_get_by_idx(3)->CreateDoor(3, 2, 1, 2);
+    scene_get_by_idx(3)->CreateDoor(7, 4, 0, 0);
+
+    scene_set_current(0);
+
+    SDL_Thread *player_thread = SDL_CreateThread(player_task, "input_thred", nullptr);
+
+    SDL_WaitThread(player_thread, nullptr);
     SDL_WaitThread(gfx_thread, nullptr);
 
-    test_scene->DestroyEntity(test_entity);
-    delete(test_scene);
+    //scene_dispose_all();
 
     return 0;
 }

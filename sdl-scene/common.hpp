@@ -1,6 +1,10 @@
 #ifndef COMMON_HPP
 #define COMMON_HPP
 
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
 struct Window
 {
     int width;

@@ -1,8 +1,3 @@
-#include <iostream>
-#include <vector>
-#include <algorithm>
-#include <thread>
-
 #include "gfx.hpp"
 
 static constexpr int DELAY_MS = (32);
@@ -131,6 +126,15 @@ static void gfx_window_deinit(void)
     SDL_VideoQuit();
 }
 
+static void try_place_focal_in_scene_entry(void)
+{
+    if (focal_element != nullptr && current_scene != nullptr)
+    {
+        Vector2Int entrance = current_scene->GetEntrance();
+        focal_element->GetTransform().SetPosition(entrance.x, entrance.y);
+    }
+}
+
 bool gfx_is_initialized(void)
 {
     return is_initialized;
@@ -173,11 +177,13 @@ SDL_Texture** gfx_get_texture_pptr(TextureId id)
 void gfx_set_focal_element(GfxElement *element)
 {
     focal_element = element;
+    try_place_focal_in_scene_entry();
 }
 
 void gfx_set_scene(Scene *new_scene)
 {
     current_scene = new_scene;
+    try_place_focal_in_scene_entry();
 }
 
 int gfx_task(void *arg)

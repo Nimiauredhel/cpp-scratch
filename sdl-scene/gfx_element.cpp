@@ -1,6 +1,5 @@
 #include "gfx_element.hpp"
 #include "gfx.hpp"
-#include <iostream>
 
 GfxElement::GfxElement(void)
     : m_transform{Transform()}, m_texture_ptr{nullptr}

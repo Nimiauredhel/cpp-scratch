@@ -16,14 +16,14 @@ static Entity *focal_entity = nullptr;
 
 static void load_texture(std::string path, SDL_Texture **texture_ptr)
 {
-    SDL_Surface *bmp = SDL_LoadBMP(path.c_str());
-    if (bmp == nullptr)
+    SDL_Surface *surface = IMG_Load(path.c_str());
+    if (surface == nullptr)
     {
         std::cout << "No texture found at path: " << path << std::endl;
         return;
     }
-    *texture_ptr = SDL_CreateTextureFromSurface(renderer, bmp);
-    SDL_FreeSurface(bmp);
+    *texture_ptr = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_FreeSurface(surface);
 }
 
 static void gfx_draw_element(Entity *element, Vector2Int offset)
@@ -117,7 +117,7 @@ static void gfx_window_init(int width, int height, int tile_size)
     renderer = SDL_CreateRenderer(main_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC); 
 
     load_texture("textures/bg.bmp", &texture_bg);
-    load_texture("textures/head.bmp", &texture_test);
+    load_texture("textures/head.png", &texture_test);
 
     SDL_RenderClear(renderer);
     SDL_RenderCopy(renderer, texture_bg, NULL, NULL);

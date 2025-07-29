@@ -5,7 +5,7 @@ ARGS=
 BUILD_DIR=build/
 EXE_PATH=$(BUILD_DIR)$(EXE_NAME)
 INC=
-LIBS=-lSDL2 -lSDL2main
+LIBS=-lSDL2 -lSDL2main -lSDL2_image
 DEFAULT_FLAGS= -std=c++14 -Werror=narrowing
 STRICT_FLAGS= $(DEFAULT_FLAGS) -Wall -pedantic -Wextra -Weffc++
 DEBUG_FLAGS= $(STRICT_FLAGS) -g -o0

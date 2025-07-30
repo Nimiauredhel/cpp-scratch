@@ -47,6 +47,7 @@ static void player_move(Transform &player_transform, int x_delta, int y_delta)
     if (new_position.x < 0 || new_position.y < 0) return;
     Vector2Int scene_size = scene_get_current()->GetSize();
     if (new_position.x >= scene_size.x || new_position.y >= scene_size.y) return;
+    if (scene_get_current()->GetTileTypeByCoord(new_position.x, new_position.y) != TILE_FLOOR) return;
 
     player_transform.SetPosition(new_position.x, new_position.y);
     player_check_collision(player_transform);

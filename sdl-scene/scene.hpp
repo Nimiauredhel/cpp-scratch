@@ -17,6 +17,7 @@ class Scene
     public:
         Scene(void);
         Scene(Vector2Int new_size);
+        ~Scene(void);
         Vector2Int GetSize(void);
         void CreateDoor(int x, int y, std::size_t dst_door_idx, std::size_t dst_scene_idx);
         Door *GetDoorFromIdx(std::size_t idx);
@@ -36,5 +37,6 @@ Scene *scene_get_current(void);
 std::size_t scene_get_count(void);
 Scene *scene_get_by_idx(std::size_t idx);
 std::size_t scene_add_new(Vector2Int size);
+void scene_dispose_all(void);
 
 #endif

@@ -34,7 +34,7 @@ int main(void)
     SDL_WaitThread(player_thread, nullptr);
     SDL_WaitThread(gfx_thread, nullptr);
 
-    //scene_dispose_all();
+    scene_dispose_all();
 
     return 0;
 }

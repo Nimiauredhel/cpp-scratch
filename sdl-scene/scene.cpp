@@ -10,6 +10,23 @@ Scene::Scene(void)
     entities.clear();
 }
 
+Scene::~Scene(void)
+{
+    std::size_t entity_count = entities.size();
+
+    for (int i = entity_count -1; i >= 0; i--)
+    {
+        if(entities[i] != nullptr)
+        {
+            delete(entities[i]);
+        }
+
+        entities.pop_back();
+    }
+
+    entities.clear();
+}
+
 Scene::Scene(Vector2Int new_size)
     : m_size{new_size}, doors {{}}, entities{{}}
 {
@@ -130,4 +147,21 @@ std::size_t scene_add_new(Vector2Int size)
 {
     scenes.push_back(new Scene(size));
     return scenes.size()-1;
+}
+
+void scene_dispose_all(void)
+{
+    std::size_t scene_count = scenes.size();
+
+    for (int i = scene_count -1; i >= 0; i--)
+    {
+        if(scenes[i] != nullptr)
+        {
+            delete(scenes[i]);
+        }
+
+        scenes.pop_back();
+    }
+
+    scenes.clear();
 }

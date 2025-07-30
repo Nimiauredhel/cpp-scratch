@@ -13,9 +13,9 @@ int main(void)
     scene_add_new({10, 2}, std::vector<TileSequence>{
             {4, TILE_FLOOR}, {2, TILE_WALL},});
     scene_add_new({2, 20}, std::vector<TileSequence>{
-            {4, TILE_FLOOR}, {2, TILE_WALL},});
+            {9, TILE_FLOOR}, {1, TILE_WALL}, {1, TILE_FLOOR}, {1, TILE_WALL},});
     scene_add_new({20, 4}, std::vector<TileSequence>{
-            {4, TILE_FLOOR}, {2, TILE_WALL},});
+            {7, TILE_FLOOR}, {3, TILE_WALL}, {10, TILE_FLOOR}, {7, TILE_FLOOR}, {3, TILE_WALL}});
     scene_add_new({8, 8}, std::vector<TileSequence>{
             {4, TILE_FLOOR}, {2, TILE_WALL},});
 

@@ -5,7 +5,7 @@
 #include "common_sdl.hpp"
 #include "entity.hpp"
 
-#define TEXTURE_ID_COUNT (6)
+#define TEXTURE_ID_COUNT (7)
 
 enum TextureId
 {
@@ -14,7 +14,8 @@ enum TextureId
     TEXTURE_FLOOR = 2,
     TEXTURE_WALL = 3,
     TEXTURE_DOOR = 4,
-    TEXTURE_PLAYER = 5,
+    TEXTURE_HUMANOID1 = 5,
+    TEXTURE_HUMANOID2 = 6,
 };
 
 void gfx_set_focal_entity(Entity *entity);

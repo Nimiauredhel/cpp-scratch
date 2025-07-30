@@ -43,7 +43,7 @@ void Entity::Draw(Window window_data, SDL_Renderer *renderer, Vector2Int offset)
     else
     {
         std::cout << "Null texture pointer on gfx element" << std::endl;
-        this->SetTexture(gfx_get_texture_ptr(TEXTURE_PLAYER));
+        this->SetTexture(gfx_get_texture_ptr(TEXTURE_HUMANOID1));
     }
 }
 

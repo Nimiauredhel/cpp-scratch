@@ -14,6 +14,8 @@ Scene::~Scene(void)
 {
     std::size_t entity_count = entities.size();
 
+    std::cout << "Deleting " << entity_count << " entities." << std::endl;
+
     for (int i = entity_count -1; i >= 0; i--)
     {
         if(entities[i] != nullptr)
@@ -155,6 +157,8 @@ void scene_dispose_all(void)
 
     for (int i = scene_count -1; i >= 0; i--)
     {
+        std::cout << "Deleting scene #" << i << "." << std::endl;
+
         if(scenes[i] != nullptr)
         {
             delete(scenes[i]);

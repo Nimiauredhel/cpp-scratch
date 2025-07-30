@@ -133,7 +133,7 @@ int player_task(void *arg)
 {
     std::cout << "Player task started." << std::endl;
     player = new Entity();
-    player->SetTexture(gfx_get_texture_ptr(TEXTURE_PLAYER));
+    player->SetTexture(gfx_get_texture_ptr(TEXTURE_HUMANOID2));
     input_init();
     gfx_set_focal_entity(player);
     is_initialized = true;

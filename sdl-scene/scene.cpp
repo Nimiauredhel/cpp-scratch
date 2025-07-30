@@ -4,10 +4,54 @@ static std::vector<Scene *> scenes;
 static Scene *current_scene = nullptr;
 
 Scene::Scene(void)
-    : m_size{0, 0}, doors {{}}, entities{{}}
+    : m_size{0 , 0}, doors{{}}, tiles{{}}, entities{{}}
+{
+    doors.clear();
+    tiles.clear();
+    entities.clear();
+}
+
+Scene::Scene(Vector2Int new_size)
+    : m_size{new_size}, doors{{}}, tiles{{}}, entities{{}}
 {
     doors.clear();
     entities.clear();
+    tiles.clear();
+
+    int tile_count = m_size.x * m_size.y;
+
+    for (int i = 0; i < tile_count; i++)
+    {
+        tiles.push_back({ TILE_FLOOR, {}});
+    }
+}
+
+Scene::Scene(Vector2Int new_size, std::vector<TileSequence> *blueprint)
+    : m_size{new_size}, doors{{}}, tiles{{}}, entities{{}}
+{
+    doors.clear();
+    entities.clear();
+    tiles.clear();
+
+    int tile_count = m_size.x * m_size.y;
+    int sequence_count = blueprint->size();
+
+    int tile_idx = 0;
+
+    for (int s = 0; s < sequence_count; s++)
+    {
+        for (int t = 0; t < (*blueprint)[s].length; t++)
+        {
+            tiles.push_back({(*blueprint)[s].type, {}});
+            tile_idx++;
+        }
+    }
+
+    // fill in the remainder with regular floor tiles
+    for (int i = tile_idx; i < tile_count; i++)
+    {
+        tiles.push_back({ TILE_FLOOR, {}});
+    }
 }
 
 Scene::~Scene(void)
@@ -29,16 +73,41 @@ Scene::~Scene(void)
     entities.clear();
 }
 
-Scene::Scene(Vector2Int new_size)
-    : m_size{new_size}, doors {{}}, entities{{}}
-{
-    doors.clear();
-    entities.clear();
-}
-
 Vector2Int Scene::GetSize(void)
 {
     return m_size;
+}
+
+TileType Scene::GetTileTypeByIdx(std::size_t idx)
+{
+    if (idx < tiles.size())
+    {
+        return tiles[idx].type;
+    }
+
+    return TILE_NONE;
+}
+
+TileInstance *Scene::GetTilePtrByIdx(std::size_t idx)
+{
+    if (idx < tiles.size())
+    {
+        return &tiles[idx];
+    }
+
+    return nullptr;
+}
+
+TileType Scene::GetTileTypeByCoord(int x, int y)
+{
+    int idx = x + (m_size.x * y);
+    return GetTileTypeByIdx(idx);
+}
+
+TileInstance *Scene::GetTilePtrByCoord(int x, int y)
+{
+    int idx = x + (m_size.x * y);
+    return GetTilePtrByIdx(idx);
 }
 
 void Scene::CreateDoor(int x, int y, std::size_t dst_door_idx, std::size_t dst_scene_idx)
@@ -145,9 +214,16 @@ Scene *scene_get_by_idx(std::size_t idx)
     return scenes[idx];
 }
 
-std::size_t scene_add_new(Vector2Int size)
+std::size_t scene_add_new(Vector2Int size, std::vector<TileSequence> blueprint)
 {
-    scenes.push_back(new Scene(size));
+    if (blueprint.size() == 0)
+    {
+        scenes.push_back(new Scene(size));
+    }
+    else
+    {
+        scenes.push_back(new Scene(size, &blueprint));
+    }
     return scenes.size()-1;
 }
 

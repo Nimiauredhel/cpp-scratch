@@ -1,9 +1,30 @@
 #ifndef SCENE_HPP
 #define SCENE_HPP
 
+#include <list>
+
 #include "common.hpp"
 #include "gfx.hpp"
 #include "entity.hpp"
+
+enum TileType
+{
+    TILE_NONE = 0,
+    TILE_FLOOR = 1,
+    TILE_WALL = 2,
+};
+
+struct TileSequence
+{
+    int length;
+    TileType type;
+};
+
+struct TileInstance
+{
+    TileType type;
+    std::list<Entity> contents;
+};
 
 struct Door
 {
@@ -17,18 +38,28 @@ class Scene
     public:
         Scene(void);
         Scene(Vector2Int new_size);
+        Scene(Vector2Int new_size, std::vector<TileSequence> *blueprint);
         ~Scene(void);
+
         Vector2Int GetSize(void);
+        TileType GetTileTypeByIdx(std::size_t idx);
+        TileInstance *GetTilePtrByIdx(std::size_t idx);
+        TileType GetTileTypeByCoord(int x, int y);
+        TileInstance *GetTilePtrByCoord(int x, int y);
+
         void CreateDoor(int x, int y, std::size_t dst_door_idx, std::size_t dst_scene_idx);
         Door *GetDoorFromIdx(std::size_t idx);
         std::size_t GetDoorCount(void);
+
         Entity *CreateEntity(TextureId initial_texture_id, Vector2Int initial_position = { -1, -1 });
         void DestroyEntity(Entity *element);
         Entity *GetEntityFromIdx(std::size_t idx);
         std::size_t GetEntityCount(void);
+
     private:
         Vector2Int m_size;
         std::vector<Door> doors;
+        std::vector<TileInstance> tiles;
         std::vector<Entity *> entities;
 };
 
@@ -36,7 +67,7 @@ void scene_set_current(std::size_t idx);
 Scene *scene_get_current(void);
 std::size_t scene_get_count(void);
 Scene *scene_get_by_idx(std::size_t idx);
-std::size_t scene_add_new(Vector2Int size);
+std::size_t scene_add_new(Vector2Int size, std::vector<TileSequence> blueprint);
 void scene_dispose_all(void);
 
 #endif

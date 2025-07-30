@@ -25,6 +25,20 @@ static SDL_Texture *texture_ptrs[TEXTURE_ID_COUNT] = { nullptr };
 
 static Entity *focal_entity = nullptr;
 
+static TextureId get_texture_id_for_tile_type(TileType tile_type)
+{
+    switch(tile_type)
+    {
+    case TILE_FLOOR:
+        return TEXTURE_FLOOR;
+    case TILE_WALL:
+        return TEXTURE_WALL;
+    case TILE_NONE:
+    default:
+        return TEXTURE_NONE;
+    }
+}
+
 static void load_texture(std::string path, SDL_Texture **texture_ptr)
 {
     SDL_Surface *surface = IMG_Load(path.c_str());
@@ -83,18 +97,18 @@ static void gfx_present(void)
     TextureId texture_id = TEXTURE_NONE;
 
     /// Drawing begins here
-    for (int x = -1; x < scene_size.x+1; x++)
+    for (int y = -1; y < scene_size.y+1; y++)
     {
-        for (int y = -1; y < scene_size.y+1; y++)
+        for (int x = -1; x < scene_size.x+1; x++)
         {
             draw_pos.x = x + offset.x;
             if (draw_pos.x < 0 || draw_pos.x >= main_window_data.width) continue;
             draw_pos.y = y + offset.y;
             if (draw_pos.y < 0 || draw_pos.y >= main_window_data.height) continue;
 
-            texture_id = (x < 0 || x >= scene_size.x
-                    || y < 0 || y >= scene_size.y) ?
-                    TEXTURE_WALL : TEXTURE_FLOOR;
+            texture_id =
+                (x < 0 || x >= scene_size.x || y < 0 || y >= scene_size.y) ? TEXTURE_WALL
+                : get_texture_id_for_tile_type(current_scene->GetTileTypeByCoord(x, y));
 
             gfx_draw_tile(x + offset.x, y + offset.y, texture_id);
         }

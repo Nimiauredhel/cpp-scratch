@@ -10,10 +10,14 @@ int main(void)
 
     while(!gfx_is_initialized()) SDL_Delay(10);
 
-    scene_add_new({10, 2});
-    scene_add_new({2, 20});
-    scene_add_new({20, 4});
-    scene_add_new({8, 8});
+    scene_add_new({10, 2}, std::vector<TileSequence>{
+            {4, TILE_FLOOR}, {2, TILE_WALL},});
+    scene_add_new({2, 20}, std::vector<TileSequence>{
+            {4, TILE_FLOOR}, {2, TILE_WALL},});
+    scene_add_new({20, 4}, std::vector<TileSequence>{
+            {4, TILE_FLOOR}, {2, TILE_WALL},});
+    scene_add_new({8, 8}, std::vector<TileSequence>{
+            {4, TILE_FLOOR}, {2, TILE_WALL},});
 
     scene_get_by_idx(0)->CreateDoor(0, 1, 1, 3);
     scene_get_by_idx(0)->CreateDoor(9, 0, 0, 1);
